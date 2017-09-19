@@ -1,0 +1,43 @@
+.root{
+    -fx-font-size: 14pt;
+    -fx-font-family: "Tahoma";
+    -fx-base: #DFB951;
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-focus-color: #B6A678;
+}
+.hbox
+{
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.button{
+-fx-border-radius:10pt;
+-fx-font:bold italic 20pt "serif";
+-fx-background-color:green;
+-fx-border: 2px solid red;
+}
+#butt
+{
+    -fx-background-color:#e8efef;
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.button:hover {
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+#butt.button:hover{
+    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+}
+.hbox
+{
+    -fx-border-style:solid inside;
+    -fx-border-width: 5;
+  
+    -fx-border-color: black;
+}
+.vbox
+{
+    -fx-border-style:solid inside;
+    -fx-border-width: 5;
+  
+    -fx-border-color: brown;
+}
