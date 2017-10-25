@@ -1,3 +1,13 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Oct 24, 2017, 12:00:42 PM
+    Author     : govilkar
+*/
+
 .root{
     -fx-font-size: 14pt;
     -fx-font-family: "Tahoma";
@@ -21,6 +31,13 @@
     -fx-font:bold italic 12pt "arial"; 
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
+#butt1
+{
+    -fx-background-color:#e8efef;
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-margin-left:5pt;
+}
 .button:hover {
     -fx-background-color: linear-gradient(#2A5058, #61a2b1);
 }
@@ -41,3 +58,54 @@
   
     -fx-border-color: brown;
 }
+
+
+.entity
+{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+  
+}
+#le
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 20px;
+}
+#ee
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 20px;
+}
+
+#entity
+{
+    -fx-background-color:transparent;         
+    -fx-border-color: black;
+     
+}
+#att
+{
+    -fx-background-color:transparent;         
+    -fx-border-color: black;
+    -fx-arc-width: 50;
+    -fx-arc-height: 100;
+    //-fx-min-height: 132px;
+    //-fx-min-width: 128px;
+
+   // -fx-background-image: url("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Attribute1.png");
+
+    //-fx-background-size: 100px 100px;
+
+    //-fx-background-repeat: no-repeat;
+
+    //-fx-background-position: center 8px;
+
+}
+#rel{
+    -fx-arc-width: 160;
+    -fx-arc-height: 160;
+    -fx-rotate: 45;
+    -fx-border-color: black;
+    -fx-background-color: transparent;
+}
+     
