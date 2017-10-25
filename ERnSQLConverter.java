@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package ernsqlconverter1;
 
 import java.io.File;
@@ -69,8 +63,8 @@ public class ERnSQLConverter1 extends Application {
         orgSceneX=border1.getLayoutX();
         orgSceneY=border1.getLayoutY();
         border1.setOnMouseClicked((e)->{
-        int x=(int) e.getSceneX();
-        int y=(int) e.getSceneY();
+        int x=(int) e.getSceneX() -150;
+        int y=(int) e.getSceneY() -100;
         if(ent==0)
         {
             Button b1=new Button("Entity");
@@ -81,19 +75,24 @@ public class ERnSQLConverter1 extends Application {
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
             TextField tf = new TextField("Entity");
-            Label lr=new Label("Entity");
-            lr.setId("lr");
-            Label er=new Label("Edit Entity");
-            er.setId("er");
+            tf.setId("tf");
+            Label le=new Label("Entity");
+            le.setId("le");
+            Label ee=new Label("Edit Entity");
+            ee.setId("ee");
             Label type=new Label("Type");
+            type.setId("type");
             RadioButton reg =new RadioButton("regular");
+            reg.setId("reg");
             RadioButton weak=new RadioButton("weak");
+            weak.setId("weak");
             RadioButton asso=new RadioButton("Associative");
+            asso.setId("asso");
             ToggleGroup tog=new ToggleGroup();
             reg.setToggleGroup(tog);
             weak.setToggleGroup(tog);
             asso.setToggleGroup(tog);
-            vbe.getChildren().addAll(er,lr,tf,type,reg,weak,asso);
+            vbe.getChildren().addAll(ee,le,tf,type,reg,weak,asso);
             border.setRight(vbe);
             a=false;
             tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
@@ -111,16 +110,22 @@ public class ERnSQLConverter1 extends Application {
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
             TextField tf = new TextField("Attribute");
-            Label lr=new Label("Attribute");
-            lr.setId("lr");
-            Label er=new Label("Edit Attribute");
-            er.setId("er");
+            tf.setId("tf");
+            Label la=new Label("Attribute");
+            la.setId("la");
+            Label ea=new Label("Edit Attribute");
+            ea.setId("ea");
             Label type=new Label("Type");
+            type.setId("type");
             CheckBox un=new CheckBox("Unique");
+            un.setId("un");
             CheckBox ml=new CheckBox("Multivalued");
+            ml.setId("ml");
             CheckBox cm=new CheckBox("Composite");
+            cm.setId("cm");
             CheckBox d=new CheckBox("Derived");
-            vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d);
+            d.setId("d");
+            vbe.getChildren().addAll(ea,la,tf,type,un,ml,cm,d);
             border.setRight(vbe);
             });
             //a=false;
@@ -145,24 +150,37 @@ public class ERnSQLConverter1 extends Application {
             System.out.println("yz");
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
+           // b1.setMouseTransparent(true);
             TextField tf = new TextField("Relationship");
             Label lr=new Label("Relationship");
             lr.setId("lr");
             Label er=new Label("Edit Relationship");
             er.setId("er");
-            Label type=new Label("Type");
-            RadioButton reg =new RadioButton("regular");
-            RadioButton weak=new RadioButton("weak");
-            RadioButton asso=new RadioButton("Associative");
+            Label ent1 = new Label("Entity One");
+            ent1.setId("ent1");
+            TextField tent1 = new TextField("Entity one");
+            tent1.setId("tent1");
+            Label card1 = new Label("Cardinality");
+            card1.setId("card1");
+            RadioButton one =new RadioButton("one");
+            one.setId("one");
+            Label ent2 = new Label("Entity Two");
+            ent2.setId("ent2");
+            TextField tent2 = new TextField("Entity two");
+            tent2.setId("tent2");
+            Label card2 = new Label("Cardinality");
+            card2.setId("card2");
+            RadioButton one1 =new RadioButton("one");
+            one1.setId("one1");
             ToggleGroup tog=new ToggleGroup();
-            reg.setToggleGroup(tog);
-            weak.setToggleGroup(tog);
-            asso.setToggleGroup(tog);
-            vbe.getChildren().addAll(er,lr,tf,type,reg,weak,asso);
+            one.setToggleGroup(tog);
+            one1.setToggleGroup(tog);
+            vbe.getChildren().addAll(er,lr,tf,ent1,tent1,card1,one,ent2,tent2,card2,one1);
             border.setRight(vbe);
             a=false;
             tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
             });
+            
         }
         ent=-1;});
         Button ercon = new Button("E-R To Database Table");
@@ -173,8 +191,8 @@ public class ERnSQLConverter1 extends Application {
         hbox.getStyleClass().add("hbox");
         hbox2.getStyleClass().add("hbox");
         vbox.getStyleClass().add("vbox");
-        File imgfile1 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Save.png");
-        File imgfile2 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Database.png");
+        File imgfile1 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Save.png");
+        File imgfile2 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Database.png");
         ImageView i1=new ImageView(imgfile1.toURI().toString());
         ImageView i2=new ImageView(imgfile2.toURI().toString());
         Button save = new Button("Save",i1);
@@ -209,7 +227,7 @@ public class ERnSQLConverter1 extends Application {
         String str[]={"Entity","Attribute","Relationship","Connect","Select","Delete","Undo","Label"};
         for(int i=0;i<8;i++)
         {
-            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
+            imageFile[i] = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1"+str[i]+".png");
             ImageView img = new ImageView(new Image(imageFile[i].toURI().toString()));
             Button b = new Button(str[i],img);
             final int x=i;
@@ -239,12 +257,13 @@ public class ERnSQLConverter1 extends Application {
     }
     EventHandler<MouseEvent> ed = 
         (MouseEvent t) -> {
-            double offsetX = t.getSceneX() - orgSceneX;
-            double offsetY = t.getSceneY() - orgSceneY;
+            double offsetX = t.getSceneX() - (orgSceneX +150);
+            double offsetY = t.getSceneY() - (orgSceneY +100);
             newTranslateX = orgTranslateX + offsetX;
             newTranslateY = orgTranslateY + offsetY;
             ((Button)(t.getSource())).setTranslateX(newTranslateX);
             ((Button)(t.getSource())).setTranslateY(newTranslateY);
+            
     };
     EventHandler<MouseEvent> ad = 
         (MouseEvent t) -> {
