@@ -69,14 +69,119 @@ and open the template in the editor.
 #le
 {
     -fx-font:bold italic 12pt "arial"; 
-    -fx-padding: 20px;
+    -fx-padding: 10px;
 }
 #ee
 {
     -fx-font:bold italic 12pt "arial";
-    -fx-padding: 20px;
+    -fx-padding: 10px;
+}
+#tf
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 10px;
 }
 
+#type
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#reg
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 10px;
+}
+#weak
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 10px;
+}
+#asso
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#ea
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#la
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#un
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#ml
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#cm
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#d
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#lr
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 10px;
+}
+#er
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#ent1
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#tent1
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#card1
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#one
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#ent2
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#tent2
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#card2
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
+#one1
+{
+    -fx-font:bold italic 12pt "arial";
+    -fx-padding: 10px;
+}
 #entity
 {
     -fx-background-color:transparent;         
@@ -89,17 +194,7 @@ and open the template in the editor.
     -fx-border-color: black;
     -fx-arc-width: 50;
     -fx-arc-height: 100;
-    //-fx-min-height: 132px;
-    //-fx-min-width: 128px;
-
-   // -fx-background-image: url("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Attribute1.png");
-
-    //-fx-background-size: 100px 100px;
-
-    //-fx-background-repeat: no-repeat;
-
-    //-fx-background-position: center 8px;
-
+    
 }
 #rel{
     -fx-arc-width: 160;
