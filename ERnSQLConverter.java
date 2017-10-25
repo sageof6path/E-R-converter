@@ -4,58 +4,167 @@
  * and open the template in the editor.
  */
 
-package ernsqlconverter;
+package ernsqlconverter1;
 
 import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.effect.Light.Point;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 /**
  *
  * @author govilkar
  */
-public class ERnSQLConverter extends Application {
+public class ERnSQLConverter1 extends Application {
+    
     double orgSceneX,orgSceneY,orgTranslateX,orgTranslateY;
-    String e;
-    Text t1;
+    String s1,s2,s3;
+    static int ent=-1;
+    Scene scene;
+    boolean a=true;
+    VBox vbe,vbe1;
     BorderPane border;
+    GridPane border1;
     double newTranslateY;
     double newTranslateX;
+    Stage st;
+    static void setEn(int i)
+    {
+        ent=i;
+    }
     @Override
     public void start(Stage mystage)
     {
+        st=mystage;
         border = new BorderPane();
         HBox hbox2 = new HBox();
         HBox hbox = new HBox();
         VBox vbox = new VBox();
+        border1 = new GridPane();
         border.setTop(hbox);
         border.setBottom(hbox2);
         border.setLeft(vbox);
+        border.setCenter(border1);
+        orgSceneX=border1.getLayoutX();
+        orgSceneY=border1.getLayoutY();
+        border1.setOnMouseClicked((e)->{
+        int x=(int) e.getSceneX();
+        int y=(int) e.getSceneY();
+        if(ent==0)
+        {
+            Button b1=new Button("Entity");
+            b1.setId("entity");
+            b1.setTranslateX(x);
+            b1.setTranslateY(y);
+            border1.getChildren().add(b1);
+            b1.setOnMousePressed((e1)->{
+            vbe.getChildren().clear();
+            TextField tf = new TextField("Entity");
+            Label lr=new Label("Entity");
+            lr.setId("lr");
+            Label er=new Label("Edit Entity");
+            er.setId("er");
+            Label type=new Label("Type");
+            RadioButton reg =new RadioButton("regular");
+            RadioButton weak=new RadioButton("weak");
+            RadioButton asso=new RadioButton("Associative");
+            ToggleGroup tog=new ToggleGroup();
+            reg.setToggleGroup(tog);
+            weak.setToggleGroup(tog);
+            asso.setToggleGroup(tog);
+            vbe.getChildren().addAll(er,lr,tf,type,reg,weak,asso);
+            border.setRight(vbe);
+            a=false;
+            tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
+            });
+            b1.setOnMouseDragged(ed);
+        }
+        if(ent==1)
+        {
+            Button b1 = new Button("Attribute");
+            b1.setId("att");
+            b1.setTranslateX(x);
+            b1.setTranslateY(y);
+            b1.setShape(new Ellipse(100,75));
+            border1.getChildren().add(b1);
+            b1.setOnMousePressed((e1)->{
+            vbe.getChildren().clear();
+            TextField tf = new TextField("Attribute");
+            Label lr=new Label("Attribute");
+            lr.setId("lr");
+            Label er=new Label("Edit Attribute");
+            er.setId("er");
+            Label type=new Label("Type");
+            CheckBox un=new CheckBox("Unique");
+            CheckBox ml=new CheckBox("Multivalued");
+            CheckBox cm=new CheckBox("Composite");
+            CheckBox d=new CheckBox("Derived");
+            vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d);
+            border.setRight(vbe);
+            });
+            //a=false;
+            b1.setOnMouseDragged(ed);
+            System.out.println("yz");
+        }
+        if(ent==2)
+        {
+            Label t=new Label("Relation");
+            t.setRotate(-45);
+            Button b1=new Button();
+            b1.setGraphic(t);
+            b1.setId("rel");
+            Rectangle r=new Rectangle(200,200);
+            b1.setShape(r);
+            b1.setMaxSize(100, 100);
+            b1.setMinSize(100, 100);
+            b1.setTranslateX(x);
+            b1.setTranslateY(y);
+            border1.getChildren().add(b1);
+            b1.setOnMouseDragged(ed);
+            System.out.println("yz");
+            b1.setOnMousePressed((e1)->{
+            vbe.getChildren().clear();
+            TextField tf = new TextField("Relationship");
+            Label lr=new Label("Relationship");
+            lr.setId("lr");
+            Label er=new Label("Edit Relationship");
+            er.setId("er");
+            Label type=new Label("Type");
+            RadioButton reg =new RadioButton("regular");
+            RadioButton weak=new RadioButton("weak");
+            RadioButton asso=new RadioButton("Associative");
+            ToggleGroup tog=new ToggleGroup();
+            reg.setToggleGroup(tog);
+            weak.setToggleGroup(tog);
+            asso.setToggleGroup(tog);
+            vbe.getChildren().addAll(er,lr,tf,type,reg,weak,asso);
+            border.setRight(vbe);
+            a=false;
+            tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
+            });
+        }
+        ent=-1;});
         Button ercon = new Button("E-R To Database Table");
         ercon.setStyle("-fx-font:bold italic 12pt \"serif\";");
         Button sqltoeng = new Button("SQL To Englsih");
@@ -64,8 +173,8 @@ public class ERnSQLConverter extends Application {
         hbox.getStyleClass().add("hbox");
         hbox2.getStyleClass().add("hbox");
         vbox.getStyleClass().add("vbox");
-        File imgfile1 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter\\src\\ernsqlconverter\\Save.png");
-        File imgfile2 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter\\src\\ernsqlconverter\\Database.png");
+        File imgfile1 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Save.png");
+        File imgfile2 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Database.png");
         ImageView i1=new ImageView(imgfile1.toURI().toString());
         ImageView i2=new ImageView(imgfile2.toURI().toString());
         Button save = new Button("Save",i1);
@@ -75,146 +184,75 @@ public class ERnSQLConverter extends Application {
         save.setId("butt");
         save.setMaxSize(150, 200);
         contodata.setId("butt1");
-        mystage.setResizable(false);
+        vbe = new VBox();
+        vbe1 = new VBox();
+        vbe.getStyleClass().add("vbox");
+        //mystage.setResizable(false);
         contodata.setMaxSize(250, 200);
         hbox.setSpacing(10);
         sqltoeng.setStyle("-fx-font:bold italic 12pt \"serif\";");
         hbox.setPadding(new Insets(10,10,10,180));
         vbox.setPadding(new Insets(10,10,10,10));
+        vbe.setPadding(new Insets(10,10,10,10));
+        vbe1.setPadding(new Insets(10,10,10,10));
         hbox.setStyle("-fx-background-color:#f2ffff;;");
         vbox.setStyle("-fx-background-color:#f2ffff;");
+        vbe.setStyle("-fx-background-color:#f2ffff;");
+        vbe1.setStyle("-fx-background-color:#f2ffff;");
         hbox.getChildren().addAll(ercon,sqltoeng);
-        Scene scene = new Scene(border,680,680);
+        scene = new Scene(border,680,680);
         mystage.setScene(scene);
-        scene.getStylesheets().add(ERnSQLConverter.class.getResource("stylesheet.css").toExternalForm());
+        scene.getStylesheets().add(ERnSQLConverter1.class.getResource("stylesheet.css").toExternalForm());
         File imageFile[]=new File[8];
-        Canvas can=new Canvas(1500,550);
-        GraphicsContext gc=can.getGraphicsContext2D();
-        gc.setFill(Color.CORNSILK);
-        gc.fillRect(0,0,1500,550);
-        border.setCenter(can);
+        border.setRight(vbe);
         boolean value[]={false,false,false,false,false,false,false,false};
         String str[]={"Entity","Attribute","Relationship","Connect","Select","Delete","Undo","Label"};
         for(int i=0;i<8;i++)
         {
-            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter\\src\\ernsqlconverter\\"+str[i]+".png");
+            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
             ImageView img = new ImageView(new Image(imageFile[i].toURI().toString()));
             Button b = new Button(str[i],img);
             final int x=i;
-            b.setOnAction(e->{fun(x);});
             b.setId("butt");
             b.setMaxSize(150, 200);
             b.setOnAction((e)->{
                 value[x]=true;
             });
+            final int a=i;
+            b.setOnMouseClicked((MouseEvent e) -> {
+                setEn(a);
+            });
             value[i]=false;
             vbox.getChildren().add(b);
             vbox.setMargin(b, new Insets(8, 0, 8, 0));
         }
-        can.setOnMouseEntered((a) -> System.out.println("hi"));
-        can.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle(MouseEvent e) {
-                int x=(int) e.getSceneX();
-                int y=(int) e.getSceneY();
-                for(int i=0;i<8;i++)
-                {
-                    if(value[i])
-                    {
-                        if(i==0)
-                        {
-                            Rectangle r = new Rectangle(x,y,100,50);
-                            r.setFill(Color.TRANSPARENT);
-                            r.setStroke(Color.BLACK);
-                            r.setOnMousePressed(rp);
-                            r.setOnMouseDragged(rd);
-                            r.setOnDragDone(rdo);
-                            t1 = new Text(x+25,y+25,"Entity");
-                            border.getChildren().addAll(r,t1);
-                            
-                        }
-                        if(i==1)
-                        {
-                            Ellipse r=new Ellipse(x,y,50,30);
-                            r.setFill(Color.TRANSPARENT);
-                            r.setStroke(Color.BLACK);
-                            gc.strokeText("Attribute", x-200, y-60);
-                            border.getChildren().add(r);
-                        }
-                        if(i==2)
-                        {
-                            Rectangle r = new Rectangle(x,y,70,70);
-                            r.setFill(Color.TRANSPARENT);
-                            r.setStroke(Color.BLACK);
-                            r.getTransforms().add(new Rotate(45,x,y));
-                            r.setOnMousePressed(rp);
-                            r.setOnMouseDragged(rd);
-                            gc.strokeText("Relation", x-200, y-10);
-                            border.getChildren().add(r);
-                        }
-                    }
-                    value[i]=false;
-                }
-            }
-        });
-        can.setOnKeyReleased(new EventHandler<KeyEvent>() {
-         @Override
-            public void handle(KeyEvent event) {
-                System.out.println("Handled");
-            }
-        });
+        
         mystage.setTitle("Mini");
         mystage.show();
     }
-    void fun(int i)
-    {
-        if(i==0)
-        {
-            System.out.println(i);
-        }
-    }
+    
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
-    EventHandler<MouseEvent> rp = 
-        new EventHandler<MouseEvent>() {
- 
-        @Override
-        public void handle(MouseEvent t) {
-            orgSceneX = t.getSceneX();
-            orgSceneY = t.getSceneY();
-            e=t1.toString();
-            t1.setText("");
-            orgTranslateX = ((Rectangle)(t.getSource())).getTranslateX();
-            orgTranslateY = ((Rectangle)(t.getSource())).getTranslateY();
-        }
-    };
-     
-    EventHandler<MouseEvent> rd = 
-        new EventHandler<MouseEvent>() {
- 
-        @Override
-        public void handle(MouseEvent t) {
+    EventHandler<MouseEvent> ed = 
+        (MouseEvent t) -> {
             double offsetX = t.getSceneX() - orgSceneX;
             double offsetY = t.getSceneY() - orgSceneY;
             newTranslateX = orgTranslateX + offsetX;
             newTranslateY = orgTranslateY + offsetY;
-            ((Rectangle)(t.getSource())).setTranslateX(newTranslateX);
-            ((Rectangle)(t.getSource())).setTranslateY(newTranslateY);
-            
-        }
+            ((Button)(t.getSource())).setTranslateX(newTranslateX);
+            ((Button)(t.getSource())).setTranslateY(newTranslateY);
     };
-    EventHandler<DragEvent> rdo = 
-        new EventHandler<DragEvent>() {
- 
-        @Override
-        public void handle(DragEvent t) {
-            t1=new Text(newTranslateX+25,newTranslateY+25,""+e);
-            border.getChildren().add(t1);
-        }
-
+    EventHandler<MouseEvent> ad = 
+        (MouseEvent t) -> {
+            double offsetX = t.getSceneX() - orgSceneX;
+            double offsetY = t.getSceneY() - orgSceneY;
+            newTranslateX = orgTranslateX + offsetX;
+            newTranslateY = orgTranslateY + offsetY;
+            ((StackPane)(t.getSource())).setTranslateX(newTranslateX);
+            ((StackPane)(t.getSource())).setTranslateY(newTranslateY);
     };
-    
 }
-    
