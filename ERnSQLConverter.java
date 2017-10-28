@@ -1,35 +1,88 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package ernsqlconverter1;
 
+import java.beans.Statement;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
  *
  * @author govilkar
  */
+class saving implements Serializable{
+    Pane b;
+    saving(Pane b)
+    {
+        b=this.b;
+    }
+}
 public class ERnSQLConverter1 extends Application {
     
     double orgSceneX,orgSceneY,orgTranslateX,orgTranslateY;
@@ -39,7 +92,7 @@ public class ERnSQLConverter1 extends Application {
     boolean a=true;
     VBox vbe,vbe1;
     BorderPane border;
-    GridPane border1;
+    Pane border1;
     double newTranslateY;
     double newTranslateX;
     Stage st;
@@ -47,85 +100,193 @@ public class ERnSQLConverter1 extends Application {
     {
         ent=i;
     }
+    ArrayList<String> entity;
     @Override
     public void start(Stage mystage)
     {
         st=mystage;
+        HashMap<String,ArrayList<String>> hmp=new HashMap();
+        HashMap<String,ArrayList<String>> hmp1=new HashMap();
+        HashMap<String,ArrayList<String>> hmp2=new HashMap();
+        ArrayList<String> primaryKey=new ArrayList<>();
+        ArrayList<String> weakL=new ArrayList<>();
         border = new BorderPane();
         HBox hbox2 = new HBox();
         HBox hbox = new HBox();
         VBox vbox = new VBox();
-        border1 = new GridPane();
+        border1 = new Pane();
         border.setTop(hbox);
+        border.setOnMouseClicked((e3)->{
+        System.out.println(e3.getSceneX()+" "+e3.getSceneY());
+        });
         border.setBottom(hbox2);
         border.setLeft(vbox);
         border.setCenter(border1);
-        orgSceneX=border1.getLayoutX();
-        orgSceneY=border1.getLayoutY();
-        border1.setOnMouseClicked((e)->{
-        int x=(int) e.getSceneX() -150;
-        int y=(int) e.getSceneY() -100;
+        //orgSceneX=border1.getLayoutX();
+        //orgSceneY=border1.getLayoutY();
+        border1.setOnMouseClicked((MouseEvent e)->{
+        int x=(int) e.getSceneX();
+        int y=(int) e.getSceneY();
+        entity=new ArrayList<String>();
         if(ent==0)
         {
             Button b1=new Button("Entity");
+            boolean b2=false;
+            b1.setUserData("entity");
             b1.setId("entity");
-            b1.setTranslateX(x);
-            b1.setTranslateY(y);
+            b1.setTranslateX(x-220);
+            b1.setTranslateY(y-70);
             border1.getChildren().add(b1);
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
-            TextField tf = new TextField("Entity");
-            tf.setId("tf");
-            Label le=new Label("Entity");
-            le.setId("le");
-            Label ee=new Label("Edit Entity");
-            ee.setId("ee");
+            String str=b1.getText();
+            TextField tf = new TextField(str);
+            tf.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tf.getText();
+                    b1.setText(s);
+                    entity.add(s);
+                    b1.setUserData(s);
+                }
+            });
+            Label lr=new Label("Entity");
+            lr.setId("lr");
+            Label er=new Label("Edit Entity");
+            er.setId("er");
             Label type=new Label("Type");
-            type.setId("type");
             RadioButton reg =new RadioButton("regular");
-            reg.setId("reg");
+            reg.setUserData("regular");
             RadioButton weak=new RadioButton("weak");
-            weak.setId("weak");
+            weak.setUserData("weak");
             RadioButton asso=new RadioButton("Associative");
-            asso.setId("asso");
+            asso.setUserData("Associative");
             ToggleGroup tog=new ToggleGroup();
             reg.setToggleGroup(tog);
             weak.setToggleGroup(tog);
             asso.setToggleGroup(tog);
-            vbe.getChildren().addAll(ee,le,tf,type,reg,weak,asso);
+            Label lea =new Label("Attribute");
+            TextField tfa = new TextField("Attribute");
+            tfa.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tfa.getText();
+                    try{for(Node n:border1.getChildren())
+                    {
+                        if(n.getUserData().equals(s))
+                        {
+                             Line line = new Line();
+                             ArrayList<String> al=new ArrayList();
+                             ArrayList<String> a2=hmp.get(b1.getText());
+                             if(a2!=null)
+                             {
+                                 for(String s2:a2)
+                                 {
+                                     al.add(s2);
+                                 }
+                                 al.add(s);
+                                 hmp.remove(b1.getText());
+                             }
+                             else
+                                 al.add(s);
+                             hmp.put(b1.getText(), al);
+                             hmp2.put(b1.getText(),al);
+                             a2=hmp.get(b1.getText());
+                             for(String s2:a2)
+                             {
+                                 System.out.println(s2);
+                             }
+                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
+                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                               Node n1=(Node)b1;
+                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
+                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
+                               border1.getChildren().add(line);
+                        }
+                    }}catch(Exception E)
+                    {
+                        System.out.println("bye");
+                    }
+                }
+            });
+            if(weakL.contains(b1.getText()))
+                weak.setSelected(true);
+            vbe.getChildren().addAll(er,lr,tf,type,reg,weak,asso,lea,tfa);
             border.setRight(vbe);
             a=false;
-            tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
+            tog.selectedToggleProperty().addListener(ty->{
+            if(tog.getSelectedToggle().getUserData().toString()=="weak")
+            {
+                weakL.add(b1.getText());
+                b1.setId("weak");
+            }
+            else if(tog.getSelectedToggle().getUserData().toString()=="regular")
+            {
+                if(weakL.contains(b1.getText()))
+                    weakL.remove(b1.getText());
+                b1.setId("entity");
+            }
             });
+            });
+            
             b1.setOnMouseDragged(ed);
         }
         if(ent==1)
         {
+            boolean arr[]=new boolean[4]; 
             Button b1 = new Button("Attribute");
+            b1.setUserData("attribute");
             b1.setId("att");
-            b1.setTranslateX(x);
-            b1.setTranslateY(y);
+            b1.setTranslateX(x-220);
+            b1.setTranslateY(y-70);
             b1.setShape(new Ellipse(100,75));
             border1.getChildren().add(b1);
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
-            TextField tf = new TextField("Attribute");
-            tf.setId("tf");
-            Label la=new Label("Attribute");
-            la.setId("la");
-            Label ea=new Label("Edit Attribute");
-            ea.setId("ea");
+            String str=b1.getText();
+            TextField tf = new TextField(str);
+            tf.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tf.getText();
+                    b1.setUserData(s);
+                    b1.setText(s);
+                }
+            });
+            Label lr=new Label("Attribute");
+            lr.setId("lr");
+            Label er=new Label("Edit Attribute");
+            er.setId("er");
             Label type=new Label("Type");
-            type.setId("type");
             CheckBox un=new CheckBox("Unique");
-            un.setId("un");
+            if(arr[0])
+                un.setSelected(arr[0]);
             CheckBox ml=new CheckBox("Multivalued");
-            ml.setId("ml");
             CheckBox cm=new CheckBox("Composite");
-            cm.setId("cm");
             CheckBox d=new CheckBox("Derived");
-            d.setId("d");
-            vbe.getChildren().addAll(ea,la,tf,type,un,ml,cm,d);
+            vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d);
+            EventHandler eh = new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    if (event.getSource() instanceof CheckBox) {
+                        CheckBox chk = (CheckBox) event.getSource();
+                        System.out.println("Action performed on checkbox " + chk.getText());
+                        primaryKey.add(b1.getText());
+                        for(String s:primaryKey)
+                        {
+                            System.out.println(s);
+                        }
+                        if ("Unique".equals(chk.getText())) {
+                            un.setSelected(un.isSelected());
+                            arr[0]=true;
+                        } else if ("Composite".equals(chk.getText())) {
+                            cm.setSelected(cm.isSelected());
+                        }
+                    }
+                }
+            };
+            un.setOnAction(eh);
+            cm.setOnAction(eh);
             border.setRight(vbe);
             });
             //a=false;
@@ -136,22 +297,40 @@ public class ERnSQLConverter1 extends Application {
         {
             Label t=new Label("Relation");
             t.setRotate(-45);
+           // ChoiceBox c=new ChoiceBox();
+            //ArrayList<String> l=new ArrayList<String>();
+            //for(Button b:entity)
+            //{
+                //l.add(b.getText());
+                //System.out.println(b.getText());
+            //}
+            //c.setItems(FXCollections.observableList((List)l));
+            
+            
             Button b1=new Button();
+            b1.setUserData("Relation");
             b1.setGraphic(t);
             b1.setId("rel");
             Rectangle r=new Rectangle(200,200);
             b1.setShape(r);
             b1.setMaxSize(100, 100);
             b1.setMinSize(100, 100);
-            b1.setTranslateX(x);
-            b1.setTranslateY(y);
+            b1.setTranslateX(x-220);
+            b1.setTranslateY(y-70);
             border1.getChildren().add(b1);
             b1.setOnMouseDragged(ed);
             System.out.println("yz");
             b1.setOnMousePressed((e1)->{
             vbe.getChildren().clear();
-           // b1.setMouseTransparent(true);
-            TextField tf = new TextField("Relationship");
+            String str=t.getText();
+            TextField tf = new TextField(str);
+            tf.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tf.getText();
+                    t.setText(s);
+                }
+            });
             Label lr=new Label("Relationship");
             lr.setId("lr");
             Label er=new Label("Edit Relationship");
@@ -159,6 +338,46 @@ public class ERnSQLConverter1 extends Application {
             Label ent1 = new Label("Entity One");
             ent1.setId("ent1");
             TextField tent1 = new TextField("Entity one");
+            tent1.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tent1.getText();
+                    try{for(Node n:border1.getChildren())
+                    {
+                        if(n.getUserData().equals(s))
+                        {
+                             Line line = new Line();
+                             ArrayList<String> al=new ArrayList();
+                             ArrayList<String> a2=hmp1.get(b1.getText());
+                             if(a2!=null)
+                             {
+                                 for(String s2:a2)
+                                 {
+                                     al.add(s2);
+                                 }
+                                 al.add(s);
+                                 hmp1.remove(t.getText());
+                             }
+                             else
+                                 al.add(s);
+                             hmp1.put(t.getText(), al);
+                             a2=hmp1.get(t.getText());
+        // bind ends of line:
+                             for(String s2:a2)
+                                 System.out.println(s2);
+                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
+                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                               Node n1=(Node)b1;
+                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
+                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
+                               border1.getChildren().add(line);
+                        }
+                    }}catch(Exception E)
+                    {
+                        System.out.println("bye2");
+                    }
+                }
+            });
             tent1.setId("tent1");
             Label card1 = new Label("Cardinality");
             card1.setId("card1");
@@ -167,6 +386,52 @@ public class ERnSQLConverter1 extends Application {
             Label ent2 = new Label("Entity Two");
             ent2.setId("ent2");
             TextField tent2 = new TextField("Entity two");
+            tent2.setOnKeyPressed((e2)->{
+                if(e2.getCode().equals(KeyCode.ENTER))
+                {
+                    String s=tent2.getText();
+                    try{for(Node n:border1.getChildren())
+                    {
+                        if(n.getUserData().equals(s))
+                        {
+                             Line line = new Line();
+                             ArrayList<String> al=new ArrayList();
+                             ArrayList<String> a2=hmp1.get(t.getText());
+                             if(a2!=null)
+                             {
+                                 for(String s2:a2)
+                                 {
+                                     al.add(s2);
+                                 }
+                                 al.add(s);
+                                 hmp1.remove(t.getText());
+                             }
+                             else
+                                 al.add(s);
+                             hmp1.put(t.getText(), al);
+                             a2=hmp1.get(t.getText());
+                             for(String s2:a2)
+                             {
+                                 System.out.println(s2);
+                             }
+        // bind ends of line:
+                             Set <String>k=hmp1.keySet();
+                            for(String s2:k)
+                                System.out.println(s2);
+                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
+                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                               Node n1=(Node)b1;
+                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
+                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
+                               border1.getChildren().add(line);
+                        }
+                    }
+                }catch(Exception E)
+                        {
+                            System.out.println("bye3");
+                        }
+            }
+            });
             tent2.setId("tent2");
             Label card2 = new Label("Cardinality");
             card2.setId("card2");
@@ -179,8 +444,7 @@ public class ERnSQLConverter1 extends Application {
             border.setRight(vbe);
             a=false;
             tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
-            });
-            
+});
         }
         ent=-1;});
         Button ercon = new Button("E-R To Database Table");
@@ -191,15 +455,265 @@ public class ERnSQLConverter1 extends Application {
         hbox.getStyleClass().add("hbox");
         hbox2.getStyleClass().add("hbox");
         vbox.getStyleClass().add("vbox");
-        File imgfile1 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Save.png");
-        File imgfile2 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Database.png");
+        File imgfile1 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Save.png");
+        File imgfile2 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Database.png");
         ImageView i1=new ImageView(imgfile1.toURI().toString());
         ImageView i2=new ImageView(imgfile2.toURI().toString());
         Button save = new Button("Save",i1);
         hbox2.setStyle("-fx-background-color:#f2ffff;");
         Button contodata = new Button("Convert to Database",i2);
+        contodata.setOnMouseClicked((e)->{
+             Iterator it = hmp.entrySet().iterator();
+            while (it.hasNext()) {
+                String query="",q2="";
+                Map.Entry pair = (Map.Entry)it.next();
+                query+="create table "+pair.getKey().toString()+"(";
+                ArrayList<String> a3=(ArrayList) pair.getValue();
+                for(String s:a3)
+                {
+                    query+=s+" varchar(50)"+",";
+                }
+                String s4="";
+                for(String s:a3)
+                {
+                    if(primaryKey.contains(s))
+                    s4+=s+",";
+                }
+                if(s4!="")
+                {
+                    query+="primary key(";
+                    for(int i=0;i<s4.length()-1;i++)
+                        query+=s4.charAt(i);
+                    query+="),";
+                }
+                for(int i=0;i<query.length()-1;i++)
+                    q2+=String.valueOf(query.charAt(i));
+                q2+=")";
+                it.remove(); // avoids a ConcurrentModificationException
+            
+            System.out.println(q2);
+        URL url=null;  
+            try {
+                url = new URL("http://clubbulletin.000webhostapp.com/project.php");
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         HttpURLConnection httpURLConnection = null;  
+            try {
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                httpURLConnection.setRequestMethod("POST");
+            } catch (ProtocolException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         httpURLConnection.setDoOutput(true);  
+         //httpURLConnection.setDoInput(true);  
+         OutputStream OS = null;  
+            try {
+                OS = httpURLConnection.getOutputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            BufferedWriter bufferedWriter=null;
+            try {
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                String data = "query" + "=" + q2;
+            try {  
+                bufferedWriter.write(data);
+                System.out.println(data);
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                bufferedWriter.flush();  
+                bufferedWriter.close();  
+                OS.close();  
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            InputStream inputStream = null;  
+            try {
+                inputStream = httpURLConnection.getInputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         BufferedReader bufferedReader = null;  
+            try {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         String response = "";  
+         String line = "";  
+            try {
+                while ((line = bufferedReader.readLine())!=null)
+                {
+                    response+= line;  
+                }  } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                bufferedReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println(response);
+            httpURLConnection.disconnect();
+        }
+            Iterator it2 = hmp1.entrySet().iterator();
+            HashMap<String,String> enp;
+            Iterator it5=hmp2.entrySet().iterator();
+            while(it5.hasNext())
+            {
+                Map.Entry pair4=(Map.Entry<String, ArrayList<String>>)it5.next();
+                String k=(String) pair4.getKey();
+                ArrayList<String> arr=(ArrayList<String>) pair4.getValue();
+                for(String str:arr)
+                {
+                    if(primaryKey.contains(str))
+                        System.out.println(k+" "+str);
+                }
+            }
+            while (it2.hasNext()) {
+                String query="",q2="";
+                Map.Entry pair = (Map.Entry)it2.next();
+                query+="create table "+pair.getKey()+"(";
+                String rq="primary key(";
+                String fk="";
+                String xy="";
+                ArrayList<String> en=(ArrayList<String>) pair.getValue();
+                int n=0;
+                for(String str:en)
+                {
+                    System.out.println(str);
+                    if(hmp2.containsKey(str)&&!(weakL.contains(str)))
+                    {
+                        ArrayList<String> val=(ArrayList<String>)hmp2.get(str);
+                        for(String s6:val)
+                        {
+                            if(primaryKey.contains(s6))
+                            {
+                                n++;
+                                rq+=s6+",";
+                                fk+="FOREIGN KEY "+"("+s6+")"+ " REFERENCES " + str+"("+s6+"),";
+                                xy+=s6+" varchar(50) "+",";
+                            }
+                        }
+                    }
+                }
+                query+=xy;
+                query+=rq;
+                query=query.substring(0,query.length()-1);
+                query+="),";
+                query+=fk;
+                for(int i=0;i<query.length()-1;i++)
+                    q2+=String.valueOf(query.charAt(i));
+                q2+=")";
+                it2.remove(); // avoids a ConcurrentModificationException
+                if(n<=1)
+                    q2="";
+            System.out.println(q2);
+        URL url=null;  
+            try {
+                url = new URL("http://clubbulletin.000webhostapp.com/project.php");
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         HttpURLConnection httpURLConnection = null;  
+            try {
+                httpURLConnection = (HttpURLConnection) url.openConnection();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                httpURLConnection.setRequestMethod("POST");
+            } catch (ProtocolException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         httpURLConnection.setDoOutput(true);  
+         //httpURLConnection.setDoInput(true);  
+         OutputStream OS = null;  
+            try {
+                OS = httpURLConnection.getOutputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            BufferedWriter bufferedWriter=null;
+            try {
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                String data = "query" + "=" + q2;
+            try {  
+                bufferedWriter.write(data);
+                System.out.println(data);
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                bufferedWriter.flush();  
+                bufferedWriter.close();  
+                OS.close();  
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            InputStream inputStream = null;  
+            try {
+                inputStream = httpURLConnection.getInputStream();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         BufferedReader bufferedReader = null;  
+            try {
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         String response = "";  
+         String line = "";  
+            try {
+                while ((line = bufferedReader.readLine())!=null)
+                {
+                    response+= line;  
+                }  } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                bufferedReader.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {  
+                inputStream.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            System.out.println(response);
+            httpURLConnection.disconnect();
+        }
+        });
         hbox2.getChildren().addAll(save,contodata);
         save.setId("butt");
+        save.setOnAction((e)->{
+            saving obj=new saving(border1);
+            
+        });
         save.setMaxSize(150, 200);
         contodata.setId("butt1");
         vbe = new VBox();
@@ -227,7 +741,7 @@ public class ERnSQLConverter1 extends Application {
         String str[]={"Entity","Attribute","Relationship","Connect","Select","Delete","Undo","Label"};
         for(int i=0;i<8;i++)
         {
-            imageFile[i] = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1"+str[i]+".png");
+            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
             ImageView img = new ImageView(new Image(imageFile[i].toURI().toString()));
             Button b = new Button(str[i],img);
             final int x=i;
@@ -244,7 +758,10 @@ public class ERnSQLConverter1 extends Application {
             vbox.getChildren().add(b);
             vbox.setMargin(b, new Insets(8, 0, 8, 0));
         }
-        
+        Screen scr=Screen.getPrimary();
+        Rectangle2D b=scr.getVisualBounds();
+        mystage.setWidth(b.getWidth());
+        mystage.setHeight(b.getHeight());
         mystage.setTitle("Mini");
         mystage.show();
     }
@@ -257,21 +774,28 @@ public class ERnSQLConverter1 extends Application {
     }
     EventHandler<MouseEvent> ed = 
         (MouseEvent t) -> {
-            double offsetX = t.getSceneX() - (orgSceneX +150);
-            double offsetY = t.getSceneY() - (orgSceneY +100);
+            double offsetX = t.getSceneX() - orgSceneX;
+            double offsetY = t.getSceneY() - orgSceneY;
+            if(!(t.getSceneX()>180&&t.getSceneX()<1100&&t.getSceneY()>70&&t.getSceneY()<550))
+            {
+                return;
+            }
             newTranslateX = orgTranslateX + offsetX;
             newTranslateY = orgTranslateY + offsetY;
-            ((Button)(t.getSource())).setTranslateX(newTranslateX);
-            ((Button)(t.getSource())).setTranslateY(newTranslateY);
-            
+            ((Button)(t.getSource())).setTranslateX(t.getSceneX()-220);
+            ((Button)(t.getSource())).setTranslateY(t.getSceneY()-70);
     };
     EventHandler<MouseEvent> ad = 
         (MouseEvent t) -> {
             double offsetX = t.getSceneX() - orgSceneX;
             double offsetY = t.getSceneY() - orgSceneY;
+            if(!(t.getSceneX()>500&&t.getSceneX()<1100&&t.getSceneY()>70&&t.getSceneY()<550))
+            {
+                return;
+            }
             newTranslateX = orgTranslateX + offsetX;
-            newTranslateY = orgTranslateY + offsetY;
-            ((StackPane)(t.getSource())).setTranslateX(newTranslateX);
-            ((StackPane)(t.getSource())).setTranslateY(newTranslateY);
+                newTranslateY = orgTranslateY + offsetY;
+                ((StackPane)(t.getSource())).setTranslateX(t.getSceneX()-70);
+                ((StackPane)(t.getSource())).setTranslateY(t.getSceneX()-180);
     };
 }
