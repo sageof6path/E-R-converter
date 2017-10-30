@@ -36,11 +36,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -105,6 +108,7 @@ public class ERnSQLConverter1 extends Application {
     public void start(Stage mystage)
     {
         st=mystage;
+        st.getIcons().add(new Image(ERnSQLConverter1.class.getResourceAsStream("images.jfif")));
         HashMap<String,ArrayList<String>> hmp=new HashMap();
         HashMap<String,ArrayList<String>> hmp1=new HashMap();
         HashMap<String,ArrayList<String>> hmp2=new HashMap();
@@ -196,12 +200,28 @@ public class ERnSQLConverter1 extends Application {
                              {
                                  System.out.println(s2);
                              }
-                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
-                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                             //line.setStartX(b1.getLayoutX());
+                             //line.setScaleY(b1.getLayoutY());
+                             
+                               line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n.boundsInParentProperty()));
+                            line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                                Node n1=(Node)b1;
-                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
-                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
-                               border1.getChildren().add(line);
+                               line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                            line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                         }
                     }}catch(Exception E)
                     {
@@ -365,12 +385,25 @@ public class ERnSQLConverter1 extends Application {
         // bind ends of line:
                              for(String s2:a2)
                                  System.out.println(s2);
-                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
-                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                             line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n.boundsInParentProperty()));
+                            line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                                Node n1=(Node)b1;
-                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
-                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
-                               border1.getChildren().add(line);
+                               line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                            line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                         }
                     }}catch(Exception E)
                     {
@@ -418,11 +451,25 @@ public class ERnSQLConverter1 extends Application {
                              Set <String>k=hmp1.keySet();
                             for(String s2:k)
                                 System.out.println(s2);
-                               line.startXProperty().bind(n.layoutXProperty().add(n.translateXProperty()));
-                               line.startYProperty().bind(n.layoutYProperty().add(n.translateYProperty()));
+                               line.startXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n.boundsInParentProperty()));
+                            line.startYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                                Node n1=(Node)b1;
-                               line.endXProperty().bind(n1.layoutXProperty().add(n1.translateXProperty()));
-                               line.endYProperty().bind(n1.layoutYProperty().add(n1.translateYProperty()));
+                               line.endXProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent();
+                                return b.getMinX() + b.getWidth() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                            line.endYProperty().bind(Bindings.createDoubleBinding(() -> {
+                                Bounds b = n1.getBoundsInParent() ;
+                                return b.getMinY() + b.getHeight() / 2 ;
+                            }, n1.boundsInParentProperty()));
+                                       border1.getChildren().add(line);
                                border1.getChildren().add(line);
                         }
                     }
@@ -795,7 +842,7 @@ public class ERnSQLConverter1 extends Application {
             }
             newTranslateX = orgTranslateX + offsetX;
                 newTranslateY = orgTranslateY + offsetY;
-                ((StackPane)(t.getSource())).setTranslateX(t.getSceneX()-70);
-                ((StackPane)(t.getSource())).setTranslateY(t.getSceneX()-180);
+                ((Circle)(t.getSource())).setTranslateX(t.getSceneX()-70);
+                ((Circle)(t.getSource())).setTranslateY(t.getSceneX()-180);
     };
 }
