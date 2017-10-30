@@ -12,61 +12,69 @@ and open the template in the editor.
     -fx-font-size: 14pt;
     -fx-font-family: "Tahoma";
     -fx-base: #DFB951;
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
     -fx-focus-color: #B6A678;
 }
 .hbox
 {
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    
 }
 .button{
--fx-border-radius:10pt;
+-fx-border-radius:20pt;
 -fx-font:bold italic 20pt "serif";
--fx-background-color:green;
--fx-border: 2px solid red;
+-fx-background-color:#68a7aa;
+-fx-border: 2px solid black;
 }
 #butt
 {
-    -fx-background-color:#e8efef;
+    -fx-background-color:#68a7aa;
     -fx-font:bold italic 12pt "arial"; 
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-arc-width: 20;
+    -fx-arc-height: 50;
 }
 #butt1
 {
-    -fx-background-color:#e8efef;
+    -fx-background-color:#68a7aa;
     -fx-font:bold italic 12pt "arial"; 
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-margin-left:5pt;
 }
 .button:hover {
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
 }
 #butt.button:hover{
-    -fx-background-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
 }
 .hbox
 {
     -fx-border-style:solid inside;
     -fx-border-width: 5;
-  
-    -fx-border-color: black;
+     -fx-border-color: black;
+    
 }
 .vbox
 {
     -fx-border-style:solid inside;
     -fx-border-width: 5;
-  
-    -fx-border-color: brown;
+    -fx-border-color: black;
+   
 }
 
 
 .entity
 {
-    -fx-background-color: transparent;
+    -fx-background-color: cyan;
     -fx-border-color: transparent;
   
 }
 #le
+{
+    -fx-font:bold italic 12pt "arial"; 
+    -fx-padding: 10px;
+}
+#lea
 {
     -fx-font:bold italic 12pt "arial"; 
     -fx-padding: 10px;
@@ -184,13 +192,13 @@ and open the template in the editor.
 }
 #entity
 {
-    -fx-background-color:cyan;         
+    -fx-background-color:#888c46;         
     -fx-border-color: black;
      
 }
 #att
 {
-    -fx-background-color:cyan;         
+    -fx-background-color:#888c46;         
     -fx-border-color: black;
     -fx-arc-width: 50;
     -fx-arc-height: 100;
@@ -201,9 +209,19 @@ and open the template in the editor.
     -fx-arc-height: 160;
     -fx-rotate: 45;
     -fx-border-color: black;
-    -fx-background-color: transparent;
+    -fx-background-color:#888c46;
 }
-#weak{
-    -fx-border-color:red;
-    -fx-background-color:transparent;
+#popy
+{
+    -fx-padding: 20px;
+     
 }
+#popn
+{
+    -fx-padding: 20px;
+}
+#top
+{
+    -fx-text-alignment: center;
+}
+     
