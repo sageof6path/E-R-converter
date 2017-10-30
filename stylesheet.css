@@ -184,13 +184,13 @@ and open the template in the editor.
 }
 #entity
 {
-    -fx-background-color:transparent;         
+    -fx-background-color:cyan;         
     -fx-border-color: black;
      
 }
 #att
 {
-    -fx-background-color:transparent;         
+    -fx-background-color:cyan;         
     -fx-border-color: black;
     -fx-arc-width: 50;
     -fx-arc-height: 100;
@@ -203,4 +203,7 @@ and open the template in the editor.
     -fx-border-color: black;
     -fx-background-color: transparent;
 }
-     
+#weak{
+    -fx-border-color:red;
+    -fx-background-color:transparent;
+}
