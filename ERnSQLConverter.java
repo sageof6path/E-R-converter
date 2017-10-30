@@ -45,6 +45,8 @@ import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -53,6 +55,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -72,6 +75,7 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -108,7 +112,7 @@ public class ERnSQLConverter1 extends Application {
     public void start(Stage mystage)
     {
         st=mystage;
-        st.getIcons().add(new Image(ERnSQLConverter1.class.getResourceAsStream("images.jfif")));
+       // st.getIcons().add(new Image(ERnSQLConverter1.class.getResourceAsStream("images.jfif")));
         HashMap<String,ArrayList<String>> hmp=new HashMap();
         HashMap<String,ArrayList<String>> hmp1=new HashMap();
         HashMap<String,ArrayList<String>> hmp2=new HashMap();
@@ -155,22 +159,27 @@ public class ERnSQLConverter1 extends Application {
                 }
             });
             Label lr=new Label("Entity");
-            lr.setId("lr");
+            lr.setId("le");
             Label er=new Label("Edit Entity");
-            er.setId("er");
+            er.setId("ee");
             Label type=new Label("Type");
             RadioButton reg =new RadioButton("regular");
             reg.setUserData("regular");
+            reg.setId("reg");
             RadioButton weak=new RadioButton("weak");
             weak.setUserData("weak");
+            weak.setId("reg");
             RadioButton asso=new RadioButton("Associative");
             asso.setUserData("Associative");
+            asso.setId("reg");
             ToggleGroup tog=new ToggleGroup();
             reg.setToggleGroup(tog);
             weak.setToggleGroup(tog);
             asso.setToggleGroup(tog);
             Label lea =new Label("Attribute");
+            lea.setId("lea");
             TextField tfa = new TextField("Attribute");
+            tfa.setId("tfa");
             tfa.setOnKeyPressed((e2)->{
                 if(e2.getCode().equals(KeyCode.ENTER))
                 {
@@ -278,12 +287,17 @@ public class ERnSQLConverter1 extends Application {
             Label er=new Label("Edit Attribute");
             er.setId("er");
             Label type=new Label("Type");
+            type.setId("type");
             CheckBox un=new CheckBox("Unique");
             if(arr[0])
                 un.setSelected(arr[0]);
+            un.setId("un");
             CheckBox ml=new CheckBox("Multivalued");
+            ml.setId("ml");
             CheckBox cm=new CheckBox("Composite");
+            cm.setId("cm");
             CheckBox d=new CheckBox("Derived");
+            d.setId("d");
             vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d);
             EventHandler eh = new EventHandler<ActionEvent>() {
                 @Override
@@ -497,18 +511,50 @@ public class ERnSQLConverter1 extends Application {
         Button ercon = new Button("E-R To Database Table");
         ercon.setStyle("-fx-font:bold italic 12pt \"serif\";");
         Button sqltoeng = new Button("SQL To Englsih");
-        hbox2.setPadding(new Insets(25,25,25,250));
-        hbox2.setSpacing(200);
+        hbox2.setPadding(new Insets(15,100,15,100));
+        hbox2.setSpacing(300);
         hbox.getStyleClass().add("hbox");
         hbox2.getStyleClass().add("hbox");
         vbox.getStyleClass().add("vbox");
-        File imgfile1 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Save.png");
-        File imgfile2 = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\Database.png");
+        File imgfile1 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Save.png");
+        File imgfile2 = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\Database.png");
         ImageView i1=new ImageView(imgfile1.toURI().toString());
         ImageView i2=new ImageView(imgfile2.toURI().toString());
         Button save = new Button("Save",i1);
-        hbox2.setStyle("-fx-background-color:#f2ffff;");
+        hbox2.setStyle("-fx-background-color:#d3e2e2;");
         Button contodata = new Button("Convert to Database",i2);
+        Button pop = new Button("POP");
+        pop.setOnMouseClicked((e)->{
+                final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(st);
+                Button b1 = new Button("YES");
+                b1.setId("popy");
+                b1.setAlignment(Pos.CENTER);
+                b1.setMinHeight(30);
+                b1.setMinWidth(40);
+                b1.setOnMouseClicked((e1)->{
+                    dialog.close();
+                });
+                Button b2 = new Button("NO");
+                b2.setAlignment(Pos.CENTER);
+                b2.setId("popn");
+                b2.setMinHeight(30);
+                b2.setMinWidth(40);
+                b2.setOnMouseClicked((e2)->{
+                    dialog.close();
+                });
+                HBox dialogHbox = new HBox();
+                //dialogHbox.setPadding(new Insets(5, 5, 5, 5));
+                dialogHbox.setSpacing(30.0);
+                dialogHbox.getChildren().addAll(b1,b2);
+                dialogHbox.setAlignment(Pos.CENTER);
+                VBox dialogVbox = new VBox(20);
+                dialogVbox.getChildren().addAll(new Text("This is a Dialog"),dialogHbox);
+                Scene dialogScene = new Scene(dialogVbox, 250, 150);
+                dialog.setScene(dialogScene);
+                dialog.show();
+        });
         contodata.setOnMouseClicked((e)->{
              Iterator it = hmp.entrySet().iterator();
             while (it.hasNext()) {
@@ -755,7 +801,7 @@ public class ERnSQLConverter1 extends Application {
             httpURLConnection.disconnect();
         }
         });
-        hbox2.getChildren().addAll(save,contodata);
+        hbox2.getChildren().addAll(save,contodata,pop);
         save.setId("butt");
         save.setOnAction((e)->{
             saving obj=new saving(border1);
@@ -768,15 +814,16 @@ public class ERnSQLConverter1 extends Application {
         vbe.getStyleClass().add("vbox");
         //mystage.setResizable(false);
         contodata.setMaxSize(250, 200);
-        hbox.setSpacing(10);
+        hbox.setSpacing(500);
         sqltoeng.setStyle("-fx-font:bold italic 12pt \"serif\";");
-        hbox.setPadding(new Insets(10,10,10,180));
-        vbox.setPadding(new Insets(10,10,10,10));
+        hbox.setPadding(new Insets(15,100,15,250));
+        vbox.setPadding(new Insets(20,10,0,10));
+        vbox.setSpacing(30);
         vbe.setPadding(new Insets(10,10,10,10));
         vbe1.setPadding(new Insets(10,10,10,10));
-        hbox.setStyle("-fx-background-color:#f2ffff;;");
-        vbox.setStyle("-fx-background-color:#f2ffff;");
-        vbe.setStyle("-fx-background-color:#f2ffff;");
+        hbox.setStyle("-fx-background-color:#d3e2e2;");
+        vbox.setStyle("-fx-background-color:#d3e2e2;");
+        vbe.setStyle("-fx-background-color:#d3e2e2;");
         vbe1.setStyle("-fx-background-color:#f2ffff;");
         hbox.getChildren().addAll(ercon,sqltoeng);
         scene = new Scene(border,680,680);
@@ -785,10 +832,10 @@ public class ERnSQLConverter1 extends Application {
         File imageFile[]=new File[8];
         border.setRight(vbe);
         boolean value[]={false,false,false,false,false,false,false,false};
-        String str[]={"Entity","Attribute","Relationship","Connect","Select","Delete","Undo","Label"};
-        for(int i=0;i<8;i++)
+        String str[]={"Entity","Attribute","Relationship","Delete","Label"};
+        for(int i=0;i<5;i++)
         {
-            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
+            imageFile[i] = new File("C:\\Users\\It\\Documents\\NetBeansProjects\\ernsqlconverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
             ImageView img = new ImageView(new Image(imageFile[i].toURI().toString()));
             Button b = new Button(str[i],img);
             final int x=i;
