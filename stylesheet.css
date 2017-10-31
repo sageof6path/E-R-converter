@@ -12,7 +12,7 @@ and open the template in the editor.
     -fx-font-size: 14pt;
     -fx-font-family: "Tahoma";
     -fx-base: #DFB951;
-    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
+    -fx-background-color: #ffffff;
     -fx-focus-color: #B6A678;
 }
 .hbox
@@ -23,12 +23,12 @@ and open the template in the editor.
 .button{
 -fx-border-radius:20pt;
 -fx-font:bold italic 20pt "serif";
--fx-background-color:#68a7aa;
+-fx-background-color:peachpuff;
 -fx-border: 2px solid black;
 }
 #butt
 {
-    -fx-background-color:#68a7aa;
+    -fx-background-color:peachpuff;
     -fx-font:bold italic 12pt "arial"; 
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-arc-width: 20;
@@ -36,16 +36,16 @@ and open the template in the editor.
 }
 #butt1
 {
-    -fx-background-color:#68a7aa;
+    -fx-background-color:peachpuff;
     -fx-font:bold italic 12pt "arial"; 
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
     -fx-margin-left:5pt;
 }
 .button:hover {
-    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
+    -fx-background-color:#83e0ef;
 }
 #butt.button:hover{
-    -fx-background-color: linear-gradient(#AA5051, #61a2b1);
+    -fx-background-color: #83e0ef;
 }
 .hbox
 {
@@ -192,9 +192,8 @@ and open the template in the editor.
 }
 #entity
 {
-    -fx-background-color:#888c46;         
-    -fx-border-color: black;
-     
+    -fx-background-color:transparent;         
+    -fx-border-color: blue;
 }
 #att
 {
@@ -225,3 +224,4 @@ and open the template in the editor.
     -fx-text-alignment: center;
 }
      
+
