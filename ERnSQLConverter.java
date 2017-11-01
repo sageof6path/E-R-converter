@@ -172,6 +172,53 @@ public class ERnSQLConverter1 extends Application {
             vbe.getChildren().clear();
             String str=b1.getText();
             TextField tf = new TextField(str);
+            Button dell =new Button("Delete");
+            dell.setId("entity");
+            dell.setOnMouseClicked((e4)->{
+                if(weakL.contains(b1.getUserData()))
+                    weakL.remove(b1.getUserData());
+                if(primaryKey.contains(b1.getUserData()))
+                    primaryKey.remove(b1.getUserData());
+                if(hmp.containsKey(b1.getUserData()))
+                    hmp.remove(b1.getUserData());
+                try{
+                for(Node n:border1.getChildren())
+                {
+                    if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
+                    {
+                        border1.getChildren().remove(n);
+                    }
+                }}catch(Exception e2)
+                {
+                    System.out.println(e2);
+                }
+                if(hmp1.containsValue(b1.getUserData().toString()))
+                {
+                    for(String s4:hmp1.keySet())
+                    {
+                        ArrayList<String> al4=hmp1.get(s4);
+                        if(al4.contains(b1.getUserData()))
+                        {
+                            al4.remove(b1.getUserData());
+                            hmp1.replace(s4, al4);
+                        }
+                    }
+                }
+                if(hmp2.containsValue(b1.getUserData()))
+                {
+                    for(String s4:hmp1.keySet())
+                    {
+                        ArrayList<String> al4=hmp1.get(s4);
+                        if(al4.contains(b1.getUserData()))
+                        {
+                            al4.remove(b1.getUserData());
+                            hmp2.replace(s4, al4);
+                        }
+                    }
+                }
+                border1.getChildren().remove(b1);
+            });
+            dell.setStyle("-fx-background-color:red");
             tf.setOnKeyPressed((e2)->{
                 if(e2.getCode().equals(KeyCode.ENTER))
                 {
@@ -256,6 +303,9 @@ public class ERnSQLConverter1 extends Application {
                                 Bounds b = n1.getBoundsInParent() ;
                                 return b.getMinY() + b.getHeight() / 2 ;
                             }, n1.boundsInParentProperty()));
+                            String uds=b1.getUserData()+"-"+n.getUserData();
+                            System.out.println(uds);
+                            line.setUserData(uds);
                                        border1.getChildren().add(line);
                         }
                     }}catch(Exception E)
@@ -266,7 +316,7 @@ public class ERnSQLConverter1 extends Application {
             });
             if(weakL.contains(b1.getText()))
                 weak.setSelected(true);
-            vbe.getChildren().addAll(ee,le,tf,type,reg,weak,asso,lea,tfa);
+            vbe.getChildren().addAll(ee,le,tf,type,reg,weak,asso,lea,tfa,dell);
             border.setRight(vbe);
             a=false;
             tog.selectedToggleProperty().addListener(ty->{
@@ -311,6 +361,37 @@ public class ERnSQLConverter1 extends Application {
                     b1.setText(s);
                 }
             });
+            Button dell =new Button("Delete");
+            dell.setId("entity");
+            dell.setOnMouseClicked((e4)->{
+                if(primaryKey.contains(b1.getUserData()))
+                    primaryKey.remove(b1.getUserData());
+                try{
+                for(Node n:border1.getChildren())
+                {
+                    if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
+                    {
+                        border1.getChildren().remove(n);
+                    }
+                }}catch(Exception e3)
+                {
+                    System.out.println(e3);
+                }
+                if(hmp.containsValue(b1.getUserData()))
+                {
+                    for(String s4:hmp.keySet())
+                    {
+                        ArrayList<String> al4=hmp1.get(s4);
+                        if(al4.contains(b1.getUserData()))
+                        {
+                            al4.remove(b1.getUserData());
+                            hmp.replace(s4, al4);
+                        }
+                    }
+                }
+                border1.getChildren().remove(b1);
+            });
+            dell.setStyle("-fx-background-color:red");
             Label lr=new Label("Attribute");
             lr.setId("lr");
             Label er=new Label("Edit Attribute");
@@ -327,7 +408,7 @@ public class ERnSQLConverter1 extends Application {
             cm.setId("cm");
             CheckBox d=new CheckBox("Derived");
             d.setId("d");
-            vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d);
+            vbe.getChildren().addAll(er,lr,tf,type,un,ml,cm,d,dell);
             EventHandler eh = new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
@@ -449,6 +530,8 @@ public class ERnSQLConverter1 extends Application {
                                 Bounds b = n1.getBoundsInParent() ;
                                 return b.getMinY() + b.getHeight() / 2 ;
                             }, n1.boundsInParentProperty()));
+                            String usd=b1.getUserData()+"-"+n.getUserData();
+                            line.setUserData(usd);
                                        border1.getChildren().add(line);
                         }
                     }}catch(Exception E)
@@ -533,7 +616,28 @@ public class ERnSQLConverter1 extends Application {
             ToggleGroup tog=new ToggleGroup();
             one.setToggleGroup(tog);
             one1.setToggleGroup(tog);
-            vbe.getChildren().addAll(er,lr,tf,ent1,tent1,card1,one,ent2,tent2,card2,one1);
+            Button dell =new Button("Delete");
+            dell.setId("entity");
+            dell.setOnMouseClicked((e4)->{
+                if(hmp1.containsKey(b1.getUserData()))
+                    hmp1.remove(b1.getUserData());
+                if(hmp2.containsKey(b1.getUserData()))
+                    hmp2.remove(b1.getUserData());
+                try{
+                for(Node n:border1.getChildren())
+                {
+                    if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
+                    {
+                        border1.getChildren().remove(n);
+                    }
+                }}catch(Exception e3)
+                {
+                    System.out.println(e3);
+                }
+                border1.getChildren().remove(b1);
+            });
+            dell.setStyle("-fx-background-color:red");
+            vbe.getChildren().addAll(er,lr,tf,ent1,tent1,card1,one,ent2,tent2,card2,one1,dell);
             border.setRight(vbe);
             a=false;
             tog.selectedToggleProperty().addListener(ty->{System.out.println("Clicked "+tog.getSelectedToggle().getUserData().toString());});
