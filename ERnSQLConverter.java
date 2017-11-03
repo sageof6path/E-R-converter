@@ -25,6 +25,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -65,6 +66,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
@@ -78,9 +80,11 @@ import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -130,7 +134,7 @@ public class ERnSQLConverter1 extends Application {
     }
     ArrayList<String> entity;
     @Override
-    public void start(Stage mystage)
+    public void start(Stage mystage) throws IOException
     {
         st=mystage;
         st.getIcons().add(new Image(ERnSQLConverter1.class.getResourceAsStream("images.jfif")));
@@ -172,47 +176,71 @@ public class ERnSQLConverter1 extends Application {
             vbe.getChildren().clear();
             String str=b1.getText();
             TextField tf = new TextField(str);
-            Button dell =new Button("Delete");
-            dell.setId("entity");
+            String imageResource ="Delete"+".png";
+            Image myImage = null;
+            try {
+                myImage = new Image(this.getClass().getResource(imageResource).toURI().toString());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ImageView img1 = new ImageView(myImage);
+            Button dell = new Button("Delete",img1);
+            dell.setId("buttdel");
+            dell.setMaxSize(150, 200);
             dell.setOnMouseClicked((e4)->{
-                if(weakL.contains(b1.getUserData()))
-                    weakL.remove(b1.getUserData());
-                if(primaryKey.contains(b1.getUserData()))
-                    primaryKey.remove(b1.getUserData());
-                if(hmp.containsKey(b1.getUserData()))
-                    hmp.remove(b1.getUserData());
+                if(weakL.contains(b1.getUserData().toString()))
+                    weakL.remove(b1.getUserData().toString());
+                if(primaryKey.contains(b1.getUserData().toString()))
+                    primaryKey.remove(b1.getUserData().toString());
+                ArrayList<Node> arr2=new ArrayList<>();
+                /*for(String s4:hmp.get(b1.getUserData().toString()))
+                {
+                    for(Node n:border1.getChildren())
+                    {
+                        if(n.getUserData().toString().contains(s4))
+                            arr2.add(n);
+                    }
+                }*/
+                if(hmp.containsKey(b1.getUserData().toString()))
+                    hmp.remove(b1.getUserData().toString());
                 try{
                 for(Node n:border1.getChildren())
                 {
                     if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
                     {
-                        border1.getChildren().remove(n);
+                        arr2.add(n);
                     }
                 }}catch(Exception e2)
                 {
                     System.out.println(e2);
                 }
+                for(Node n:arr2)
+                {
+                    border1.getChildren().remove(n);
+                }
                 if(hmp1.containsValue(b1.getUserData().toString()))
                 {
-                    for(String s4:hmp1.keySet())
+                    Set<String> ste=hmp1.keySet();
+                    for(String s4:ste)
                     {
-                        ArrayList<String> al4=hmp1.get(s4);
-                        if(al4.contains(b1.getUserData()))
+                        ArrayList<String> al4=new ArrayList<>(hmp1.get(s4));
+                        if(al4.contains(b1.getUserData().toString()))
                         {
-                            al4.remove(b1.getUserData());
-                            hmp1.replace(s4, al4);
+                            al4.remove(b1.getUserData().toString());
+                            hmp1.replace(s4,hmp1.get(s4) ,al4);
                         }
                     }
                 }
-                if(hmp2.containsValue(b1.getUserData()))
+                if(hmp2.containsValue(b1.getUserData().toString()))
                 {
-                    for(String s4:hmp1.keySet())
+                    Set<String> ste=hmp2.keySet();
+                    for(String s4:ste)
                     {
-                        ArrayList<String> al4=hmp1.get(s4);
-                        if(al4.contains(b1.getUserData()))
+                        ArrayList<String> al4=new ArrayList<>(hmp2.get(s4));
+                        if(al4.contains(b1.getUserData().toString()))
                         {
-                            al4.remove(b1.getUserData());
-                            hmp2.replace(s4, al4);
+                            al4.remove(b1.getUserData().toString());
+                            hmp1.replace(s4,hmp2.get(s4) ,al4);
                         }
                     }
                 }
@@ -361,31 +389,46 @@ public class ERnSQLConverter1 extends Application {
                     b1.setText(s);
                 }
             });
-            Button dell =new Button("Delete");
-            dell.setId("entity");
+            String imageResource ="Delete"+".png";
+            Image myImage = null;
+            try {
+                myImage = new Image(this.getClass().getResource(imageResource).toURI().toString());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ImageView img1 = new ImageView(myImage);
+            Button dell = new Button("Delete",img1);
+            dell.setId("butt");
+            dell.setMaxSize(150, 200);
             dell.setOnMouseClicked((e4)->{
                 if(primaryKey.contains(b1.getUserData()))
                     primaryKey.remove(b1.getUserData());
+                ArrayList<Node> arr2=new ArrayList<>();
                 try{
                 for(Node n:border1.getChildren())
                 {
                     if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
                     {
-                        border1.getChildren().remove(n);
+                        arr2.add(n);
                     }
                 }}catch(Exception e3)
                 {
                     System.out.println(e3);
                 }
-                if(hmp.containsValue(b1.getUserData()))
+                for(Node n:arr2)
+                {
+                    border1.getChildren().remove(n);
+                }
+                if(hmp.containsValue(b1.getUserData().toString()))
                 {
                     for(String s4:hmp.keySet())
                     {
-                        ArrayList<String> al4=hmp1.get(s4);
-                        if(al4.contains(b1.getUserData()))
+                        ArrayList<String> al4=new ArrayList<>(hmp1.get(s4));
+                        if(al4.contains(b1.getUserData().toString()))
                         {
-                            al4.remove(b1.getUserData());
-                            hmp.replace(s4, al4);
+                            al4.remove(b1.getUserData().toString());
+                            hmp.remove(s4);
+                            hmp.put(s4, al4);
                         }
                     }
                 }
@@ -598,6 +641,8 @@ public class ERnSQLConverter1 extends Application {
                                 Bounds b = n1.getBoundsInParent() ;
                                 return b.getMinY() + b.getHeight() / 2 ;
                             }, n1.boundsInParentProperty()));
+                            String uds=b1.getUserData().toString()+"-"+n.getUserData().toString();
+                            line.setUserData(uds);
                                        border1.getChildren().add(line);
                                border1.getChildren().add(line);
                         }
@@ -616,23 +661,37 @@ public class ERnSQLConverter1 extends Application {
             ToggleGroup tog=new ToggleGroup();
             one.setToggleGroup(tog);
             one1.setToggleGroup(tog);
-            Button dell =new Button("Delete");
-            dell.setId("entity");
+            String imageResource ="Delete"+".png";
+            Image myImage = null;
+            try {
+                myImage = new Image(this.getClass().getResource(imageResource).toURI().toString());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ImageView img1 = new ImageView(myImage);
+            Button dell = new Button("Delete",img1);
+            dell.setId("butt");
+            dell.setMaxSize(150, 200);
             dell.setOnMouseClicked((e4)->{
                 if(hmp1.containsKey(b1.getUserData()))
                     hmp1.remove(b1.getUserData());
                 if(hmp2.containsKey(b1.getUserData()))
                     hmp2.remove(b1.getUserData());
+                ArrayList<Node> arr2=new ArrayList<>();
                 try{
                 for(Node n:border1.getChildren())
                 {
                     if(n.getUserData().toString().contains(b1.getUserData()+"-")||n.getUserData().toString().contains("-"+b1.getUserData()))
                     {
-                        border1.getChildren().remove(n);
+                        arr2.add(n);
                     }
                 }}catch(Exception e3)
                 {
                     System.out.println(e3);
+                }
+                for(Node n:arr2)
+                {
+                    border1.getChildren().remove(n);
                 }
                 border1.getChildren().remove(b1);
             });
@@ -659,14 +718,63 @@ public class ERnSQLConverter1 extends Application {
         Button save = new Button("Save",i1);
         hbox2.setStyle("-fx-background-color:#d3e2e2;");
         Button contodata = new Button("Convert to Database",i2);
-        Button pop = new Button("PopUp");
-        pop.setOnMouseClicked((e)->{
-           
-                final Stage dialog = new Stage();
+        contodata.setOnMouseClicked((e)->{
+            final Stage dialog = new Stage();
+            HashMap<String,String> userd = new HashMap<>();
                 dialog.initModality(Modality.APPLICATION_MODAL);
                 dialog.initOwner(st);
                 Button b1 = new Button("Yes");
                 b1.setId("popy");
+                HBox hb1 = new HBox();
+                HBox hb2 = new HBox();
+                HBox hb3 = new HBox();
+                HBox hb4 = new HBox();
+                Label tu = new Label("  Username     ");
+                tu.setAlignment(Pos.CENTER_LEFT);
+                tu.setStyle("-fx-font:bold italic 12pt \"serif\";");
+                TextField tfu = new TextField("");
+                tfu.setOnKeyPressed((e1)->{
+                    if(e1.getCode().equals(KeyCode.ENTER))
+                        userd.put("username",tfu.getText());
+                });
+                
+                tfu.setAlignment(Pos.CENTER);
+                Label tdn = new Label("Database name");
+                tdn.setAlignment(Pos.CENTER_LEFT);
+                tdn.setStyle("-fx-font:bold italic 12pt \"serif\";");
+                TextField tfdn = new TextField("");
+                tfdn.setOnKeyPressed((e1)->{
+                    if(e1.getCode().equals(KeyCode.ENTER))
+                        userd.put("databasename",tfdn.getText());
+                });
+                tfdn.setAlignment(Pos.CENTER);
+                Label tp = new Label("  Password     ");
+                tp.setAlignment(Pos.CENTER_LEFT);
+                tp.setStyle("-fx-font:bold italic 12pt \"serif\";");
+                TextField tfp = new TextField("");
+                tfp.setOnKeyPressed((KeyEvent e1) -> {
+                    if(e1.getCode().equals(KeyCode.ENTER))
+                        userd.put("password",tfp.getText());
+            });
+                tfp.setAlignment(Pos.CENTER);
+                Label turl = new Label("  Paste URL   ");
+                turl.setAlignment(Pos.CENTER_LEFT);
+                turl.setStyle("-fx-font:bold italic 12pt \"serif\";");
+                TextField tfurl = new TextField("");
+                tfurl.setAlignment(Pos.CENTER);
+                tfurl.setOnKeyPressed((e1)->{
+                    if(e1.getCode().equals(KeyCode.ENTER))
+                        userd.put("url",tfurl.getText());
+                });
+                hb1.getChildren().addAll(tu,tfu);
+                hb1.setSpacing(10);
+                hb1.setPadding(new Insets(10,0,0,0));
+                hb2.setSpacing(10);
+                hb3.setSpacing(10);
+                hb4.setSpacing(10);
+                hb2.getChildren().addAll(tp,tfp);
+                hb3.getChildren().addAll(turl,tfurl);
+                hb4.getChildren().addAll(tdn,tfdn);
                 b1.setMinHeight(30);
                 b1.setMinWidth(40);
                 Button b2 = new Button("No");
@@ -674,6 +782,263 @@ public class ERnSQLConverter1 extends Application {
                 b2.setMinHeight(30);
                 b2.setMinWidth(40);
                 b1.setOnMouseClicked((z)->{
+                    
+                    Iterator it = hmp.entrySet().iterator();
+                    while (it.hasNext()) {
+                        String query="",q2="";
+                        Map.Entry pair = (Map.Entry)it.next();
+                        query+="create table "+pair.getKey().toString()+"(";
+                        ArrayList<String> a3=(ArrayList) pair.getValue();
+                        for(String s:a3)
+                        {
+                            query+=s+" varchar(50)"+",";
+                        }
+                        String s4="";
+                        for(String s:a3)
+                        {
+                            if(primaryKey.contains(s))
+                            s4+=s+",";
+                        }
+                        if(s4!="")
+                        {
+                            query+="primary key(";
+                            for(int i=0;i<s4.length()-1;i++)
+                                query+=s4.charAt(i);
+                            query+="),";
+                        }
+                        for(int i=0;i<query.length()-1;i++)
+                            q2+=String.valueOf(query.charAt(i));
+                        q2+=")";
+                        it.remove(); // avoids a ConcurrentModificationException
+
+                    System.out.println(q2);
+                URL url=null;  
+                    try {
+                        url = new URL("http://clubbulletin.000webhostapp.com/project.php");
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 HttpURLConnection httpURLConnection = null;  
+                    try {
+                        httpURLConnection = (HttpURLConnection) url.openConnection();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        httpURLConnection.setRequestMethod("POST");
+                    } catch (ProtocolException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 httpURLConnection.setDoOutput(true);  
+                 //httpURLConnection.setDoInput(true);  
+                 OutputStream OS = null;  
+                    try {
+                        OS = httpURLConnection.getOutputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    BufferedWriter bufferedWriter=null;
+                    try {
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        String data = "query" + "=" + q2;
+                    try {  
+                        String data1 = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(userd.get("username"), "UTF-8") + "&" +  
+                        URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(userd.get("password"), "UTF-8")+ "&" +  
+                        URLEncoder.encode("url", "UTF-8") + "=" + URLEncoder.encode(userd.get("url"), "UTF-8") + "&" + 
+                        URLEncoder.encode("databasename", "UTF-8") + "=" + URLEncoder.encode(userd.get("databasename"), "UTF-8") ;
+                        System.out.println(userd.get("password"));
+                        bufferedWriter.write(data1);
+                        bufferedWriter.write("&"+data);
+                        System.out.println(data);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        bufferedWriter.flush();  
+                        bufferedWriter.close();  
+                        OS.close();  
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    InputStream inputStream = null;  
+                    try {
+                        inputStream = httpURLConnection.getInputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 BufferedReader bufferedReader = null;  
+                    try {
+                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 String response = "";  
+                 String line = "";  
+                    try {
+                        while ((line = bufferedReader.readLine())!=null)
+                        {
+                            response+= line;  
+                        }  } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        bufferedReader.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        inputStream.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println(response);
+                    httpURLConnection.disconnect();
+                }
+                    Iterator it2 = hmp1.entrySet().iterator();
+                    HashMap<String,String> enp;
+                    Iterator it5=hmp2.entrySet().iterator();
+                    while(it5.hasNext())
+                    {
+                        Map.Entry pair4=(Map.Entry<String, ArrayList<String>>)it5.next();
+                        String k=(String) pair4.getKey();
+                        ArrayList<String> arr=(ArrayList<String>) pair4.getValue();
+                        for(String str:arr)
+                        {
+                            if(primaryKey.contains(str))
+                                System.out.println(k+" "+str);
+                        }
+                    }
+                    while (it2.hasNext()) {
+                        String query="",q2="";
+                        Map.Entry pair = (Map.Entry)it2.next();
+                        query+="create table "+pair.getKey()+"(";
+                        String rq="primary key(";
+                        String fk="";
+                        String xy="";
+                        ArrayList<String> en=(ArrayList<String>) pair.getValue();
+                        int n=0;
+                        for(String str:en)
+                        {
+                            System.out.println(str);
+                            if(hmp2.containsKey(str)&&!(weakL.contains(str)))
+                            {
+                                ArrayList<String> val=(ArrayList<String>)hmp2.get(str);
+                                for(String s6:val)
+                                {
+                                    if(primaryKey.contains(s6))
+                                    {
+                                        n++;
+                                        rq+=s6+",";
+                                        fk+="FOREIGN KEY "+"("+s6+")"+ " REFERENCES " + str+"("+s6+"),";
+                                        xy+=s6+" varchar(50) "+",";
+                                    }
+                                }
+                            }
+                        }
+                        query+=xy;
+                        query+=rq;
+                        query=query.substring(0,query.length()-1);
+                        query+="),";
+                        query+=fk;
+                        for(int i=0;i<query.length()-1;i++)
+                            q2+=String.valueOf(query.charAt(i));
+                        q2+=")";
+                        it2.remove(); // avoids a ConcurrentModificationException
+                        if(n<=1)
+                            q2="";
+                    System.out.println(q2);
+                URL url=null;  
+                    try {
+                        url = new URL("http://clubbulletin.000webhostapp.com/project.php");
+                    } catch (MalformedURLException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 HttpURLConnection httpURLConnection = null;  
+                    try {
+                        httpURLConnection = (HttpURLConnection) url.openConnection();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        httpURLConnection.setRequestMethod("POST");
+                    } catch (ProtocolException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 httpURLConnection.setDoOutput(true);  
+                 //httpURLConnection.setDoInput(true);  
+                 OutputStream OS = null;  
+                    try {
+                        OS = httpURLConnection.getOutputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    BufferedWriter bufferedWriter=null;
+                    try {
+                    bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {
+                        String data = "query" + "=" + q2;
+                    try { 
+                        String data1 = URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(userd.get("username"), "UTF-8") + "&" +  
+                        URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(userd.get("password"), "UTF-8")+ "&" +  
+                        URLEncoder.encode("url", "UTF-8") + "=" + URLEncoder.encode(userd.get("url"), "UTF-8") + "&" + 
+                        URLEncoder.encode("databasename", "UTF-8") + "=" + URLEncoder.encode(userd.get("databasename"), "UTF-8") ;
+                        System.out.println(userd.get("password"));
+                        bufferedWriter.write(data1);
+                        bufferedWriter.write("&"+data);
+                        System.out.println(data);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        bufferedWriter.flush();  
+                        bufferedWriter.close();  
+                        OS.close();  
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    InputStream inputStream = null;  
+                    try {
+                        inputStream = httpURLConnection.getInputStream();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 BufferedReader bufferedReader = null;  
+                    try {
+                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                 String response = "";  
+                 String line = "";  
+                    try {
+                        while ((line = bufferedReader.readLine())!=null)
+                        {
+                            response+= line;  
+                        }  } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        bufferedReader.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    try {  
+                        inputStream.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    System.out.println(response);
+                    httpURLConnection.disconnect();
+                }
                     dialog.close();
                 });
                 b2.setOnMouseClicked((z)->{
@@ -682,273 +1047,36 @@ public class ERnSQLConverter1 extends Application {
                 HBox dialogHbox = new HBox(20);
                 dialogHbox.getChildren().addAll(b1,b2);
                 b1.setAlignment(Pos.CENTER);
+                b1.setId("butt");
+                b2.setId("butt");
                 b2.setAlignment(Pos.CENTER);
                 dialogHbox.setAlignment(Pos.CENTER);
                 VBox dialogVbox = new VBox(20);
-                dialogVbox.getChildren().addAll(new Text("Do You wan to convert to the database?"),dialogHbox);
-                Scene dialogScene = new Scene(dialogVbox, 250, 150);
+                Text t = new Text("  Do You wan to convert to the database?");
+                t.setStyle("-fx-font:bold italic 12pt \"serif\";");
+                dialogVbox.getChildren().addAll(t,hb1,hb2,hb3,hb4,dialogHbox);
+                Scene dialogScene = new Scene(dialogVbox, 350, 300);
                 dialog.setScene(dialogScene);
+                dialog.setTitle("Final");
                 dialog.show();
-        });
-        contodata.setOnMouseClicked((e)->{
-             Iterator it = hmp.entrySet().iterator();
-            while (it.hasNext()) {
-                String query="",q2="";
-                Map.Entry pair = (Map.Entry)it.next();
-                query+="create table "+pair.getKey().toString()+"(";
-                ArrayList<String> a3=(ArrayList) pair.getValue();
-                for(String s:a3)
-                {
-                    query+=s+" varchar(50)"+",";
-                }
-                String s4="";
-                for(String s:a3)
-                {
-                    if(primaryKey.contains(s))
-                    s4+=s+",";
-                }
-                if(s4!="")
-                {
-                    query+="primary key(";
-                    for(int i=0;i<s4.length()-1;i++)
-                        query+=s4.charAt(i);
-                    query+="),";
-                }
-                for(int i=0;i<query.length()-1;i++)
-                    q2+=String.valueOf(query.charAt(i));
-                q2+=")";
-                it.remove(); // avoids a ConcurrentModificationException
-            
-            System.out.println(q2);
-        URL url=null;  
-            try {
-                url = new URL("http://clubbulletin.000webhostapp.com/project.php");
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         HttpURLConnection httpURLConnection = null;  
-            try {
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                httpURLConnection.setRequestMethod("POST");
-            } catch (ProtocolException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         httpURLConnection.setDoOutput(true);  
-         //httpURLConnection.setDoInput(true);  
-         OutputStream OS = null;  
-            try {
-                OS = httpURLConnection.getOutputStream();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            BufferedWriter bufferedWriter=null;
-            try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                String data = "query" + "=" + q2;
-            try {  
-                bufferedWriter.write(data);
-                System.out.println(data);
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                bufferedWriter.flush();  
-                bufferedWriter.close();  
-                OS.close();  
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            InputStream inputStream = null;  
-            try {
-                inputStream = httpURLConnection.getInputStream();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         BufferedReader bufferedReader = null;  
-            try {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         String response = "";  
-         String line = "";  
-            try {
-                while ((line = bufferedReader.readLine())!=null)
-                {
-                    response+= line;  
-                }  } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                bufferedReader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                inputStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println(response);
-            httpURLConnection.disconnect();
-        }
-            Iterator it2 = hmp1.entrySet().iterator();
-            HashMap<String,String> enp;
-            Iterator it5=hmp2.entrySet().iterator();
-            while(it5.hasNext())
-            {
-                Map.Entry pair4=(Map.Entry<String, ArrayList<String>>)it5.next();
-                String k=(String) pair4.getKey();
-                ArrayList<String> arr=(ArrayList<String>) pair4.getValue();
-                for(String str:arr)
-                {
-                    if(primaryKey.contains(str))
-                        System.out.println(k+" "+str);
-                }
-            }
-            while (it2.hasNext()) {
-                String query="",q2="";
-                Map.Entry pair = (Map.Entry)it2.next();
-                query+="create table "+pair.getKey()+"(";
-                String rq="primary key(";
-                String fk="";
-                String xy="";
-                ArrayList<String> en=(ArrayList<String>) pair.getValue();
-                int n=0;
-                for(String str:en)
-                {
-                    System.out.println(str);
-                    if(hmp2.containsKey(str)&&!(weakL.contains(str)))
-                    {
-                        ArrayList<String> val=(ArrayList<String>)hmp2.get(str);
-                        for(String s6:val)
-                        {
-                            if(primaryKey.contains(s6))
-                            {
-                                n++;
-                                rq+=s6+",";
-                                fk+="FOREIGN KEY "+"("+s6+")"+ " REFERENCES " + str+"("+s6+"),";
-                                xy+=s6+" varchar(50) "+",";
-                            }
-                        }
-                    }
-                }
-                query+=xy;
-                query+=rq;
-                query=query.substring(0,query.length()-1);
-                query+="),";
-                query+=fk;
-                for(int i=0;i<query.length()-1;i++)
-                    q2+=String.valueOf(query.charAt(i));
-                q2+=")";
-                it2.remove(); // avoids a ConcurrentModificationException
-                if(n<=1)
-                    q2="";
-            System.out.println(q2);
-        URL url=null;  
-            try {
-                url = new URL("http://clubbulletin.000webhostapp.com/project.php");
-            } catch (MalformedURLException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         HttpURLConnection httpURLConnection = null;  
-            try {
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                httpURLConnection.setRequestMethod("POST");
-            } catch (ProtocolException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         httpURLConnection.setDoOutput(true);  
-         //httpURLConnection.setDoInput(true);  
-         OutputStream OS = null;  
-            try {
-                OS = httpURLConnection.getOutputStream();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            BufferedWriter bufferedWriter=null;
-            try {
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-                String data = "query" + "=" + q2;
-            try {  
-                bufferedWriter.write(data);
-                System.out.println(data);
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-                bufferedWriter.flush();  
-                bufferedWriter.close();  
-                OS.close();  
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            InputStream inputStream = null;  
-            try {
-                inputStream = httpURLConnection.getInputStream();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         BufferedReader bufferedReader = null;  
-            try {
-                bufferedReader = new BufferedReader(new InputStreamReader(inputStream,"iso-8859-1"));
-            } catch (UnsupportedEncodingException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-         String response = "";  
-         String line = "";  
-            try {
-                while ((line = bufferedReader.readLine())!=null)
-                {
-                    response+= line;  
-                }  } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                bufferedReader.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {  
-                inputStream.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            System.out.println(response);
-            httpURLConnection.disconnect();
-        }
         });
         open.setStyle("-fx-font:bold italic 12pt \"serif\";");
         open.setId("butt");
-        hbox2.getChildren().addAll(save,contodata,pop,open);
+        hbox2.getChildren().addAll(save,contodata,open);
         save.setId("butt");
         save.setOnAction((e)->{
+            FileChooser fileChooser = new FileChooser();
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+              fileChooser.getExtensionFilters().add(extFilter);
+              File file1 = fileChooser.showSaveDialog(st);
             sa.hmp1=hmp1;
             sa.hmp=hmp;
             sa.primaryKey=primaryKey;
             sa.weakL=weakL;
-            String filename="xyz.txt";
+            //String filename="xyz.txt";
             FileOutputStream file = null;
             try {
-                file = new FileOutputStream(filename);
+                file = new FileOutputStream(file1);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -965,9 +1093,13 @@ public class ERnSQLConverter1 extends Application {
             }
         });
         open.setOnMouseClicked((e1)->{
+            FileChooser fileChooser = new FileChooser();
+              FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
+              fileChooser.getExtensionFilters().add(extFilter);
+              File file1 = fileChooser.showOpenDialog(st);
             FileInputStream file = null;
             try {
-                file=new FileInputStream("xyz.txt");
+                file=new FileInputStream(file1);
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1276,6 +1408,8 @@ public class ERnSQLConverter1 extends Application {
                                                 Bounds b = n1.getBoundsInParent() ;
                                                 return b.getMinY() + b.getHeight() / 2 ;
                                             }, n1.boundsInParentProperty()));
+                                            String uds=b1.getUserData().toString()+"-"+n.getUserData().toString();
+                                            line.setUserData(uds);
                                                        border1.getChildren().add(line);
                                         }
                                     }}catch(Exception E)
@@ -1460,6 +1594,8 @@ public class ERnSQLConverter1 extends Application {
                             Bounds b = n2.getBoundsInParent() ;
                             return b.getMinY() + b.getHeight() / 2 ;
                             }, n2.boundsInParentProperty()));
+                            String uds=n2.getUserData().toString()+"-"+n.getUserData().toString();
+                            line.setUserData(uds);
                             border1.getChildren().add(line);
                         }
                         
@@ -1489,18 +1625,24 @@ public class ERnSQLConverter1 extends Application {
         vbox.setStyle("-fx-background-color:#d3e2e2;");
         vbe.setStyle("-fx-background-color:#d3e2e2;");
         vbe1.setStyle("-fx-background-color:#d3e2e2;");
-        hbox.getChildren().addAll(ercon,sqltoeng);
+        hbox.getChildren().addAll(ercon);
         scene = new Scene(border,680,680);
         mystage.setScene(scene);
         scene.getStylesheets().add(ERnSQLConverter1.class.getResource("stylesheet.css").toExternalForm());
         File imageFile[]=new File[8];
         border.setRight(vbe);
         boolean value[]={false,false,false,false,false,false,false,false};
-        String str[]={"Entity","Attribute","Relationship","Delete","Label"};
-        for(int i=0;i<5;i++)
+        String str[]={"Entity","Attribute","Relationship","Label"};
+        for(int i=0;i<4;i++)
         {
-            imageFile[i] = new File("C:\\Users\\govilkar\\Desktop\\ERnSQLConverter1\\src\\ernsqlconverter1\\"+str[i]+".png");
-            ImageView img = new ImageView(new Image(imageFile[i].toURI().toString()));
+            String imageResource =str[i]+".png";
+            Image myImage = null;
+            try {
+                myImage = new Image(this.getClass().getResource(imageResource).toURI().toString());
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ImageView img = new ImageView(myImage);
             Button b = new Button(str[i],img);
             final int x=i;
             b.setId("butt");
@@ -1520,7 +1662,7 @@ public class ERnSQLConverter1 extends Application {
         Rectangle2D b=scr.getVisualBounds();
         mystage.setWidth(b.getWidth());
         mystage.setHeight(b.getHeight());
-        mystage.setTitle("Mini");
+        mystage.setTitle("ERConverter");
         mystage.show();
     }
     
