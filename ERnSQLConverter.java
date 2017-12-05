@@ -59,6 +59,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -781,8 +782,13 @@ public class ERnSQLConverter1 extends Application {
                 b2.setId("popn");
                 b2.setMinHeight(30);
                 b2.setMinWidth(40);
+                final ProgressBar pb = new ProgressBar();
+                //pb.setVisible(false);
+                pb.setProgress(-1.0);
+                pb.setPrefWidth(340);
                 b1.setOnMouseClicked((z)->{
-                    
+                    pb.setVisible(true);
+                    pb.setProgress(-1.0);
                     Set<String> it = (Set<String>)hmp.keySet();
                     for (String ky:it) {
                         String query="",q2="";
@@ -810,6 +816,7 @@ public class ERnSQLConverter1 extends Application {
                         q2+=")";
                     System.out.println(q2);
                 URL url=null;  
+                pb.setProgress(0.0);
                     try {
                         url = new URL("http://clubbulletin.000webhostapp.com/project.php");
                     } catch (MalformedURLException ex) {
@@ -893,6 +900,7 @@ public class ERnSQLConverter1 extends Application {
                     } catch (IOException ex) {
                         Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    pb.setProgress(0.35);
                     System.out.println(response);
                     httpURLConnection.disconnect();
                 }
@@ -976,6 +984,7 @@ public class ERnSQLConverter1 extends Application {
                     } catch (UnsupportedEncodingException ex) {
                         Logger.getLogger(ERnSQLConverter1.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    pb.setProgress(1.0);
                     try {
                         String data = "query" + "=" + q2;
                     try { 
@@ -1047,7 +1056,7 @@ public class ERnSQLConverter1 extends Application {
                 VBox dialogVbox = new VBox(20);
                 Text t = new Text("  Do You wan to convert to the database?");
                 t.setStyle("-fx-font:bold italic 12pt \"serif\";");
-                dialogVbox.getChildren().addAll(t,hb1,hb2,hb3,hb4,dialogHbox);
+                dialogVbox.getChildren().addAll(t,hb1,hb2,hb3,hb4,dialogHbox,pb);
                 Scene dialogScene = new Scene(dialogVbox, 350, 300);
                 dialog.setScene(dialogScene);
                 dialog.setTitle("Final");
