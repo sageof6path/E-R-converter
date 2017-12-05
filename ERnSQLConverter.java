@@ -783,12 +783,11 @@ public class ERnSQLConverter1 extends Application {
                 b2.setMinWidth(40);
                 b1.setOnMouseClicked((z)->{
                     
-                    Iterator it = hmp.entrySet().iterator();
-                    while (it.hasNext()) {
+                    Set<String> it = (Set<String>)hmp.keySet();
+                    for (String ky:it) {
                         String query="",q2="";
-                        Map.Entry pair = (Map.Entry)it.next();
-                        query+="create table "+pair.getKey().toString()+"(";
-                        ArrayList<String> a3=(ArrayList) pair.getValue();
+                        query+="create table "+ky+"(";
+                        ArrayList<String> a3=(ArrayList) hmp.get(ky);
                         for(String s:a3)
                         {
                             query+=s+" varchar(50)"+",";
@@ -809,8 +808,6 @@ public class ERnSQLConverter1 extends Application {
                         for(int i=0;i<query.length()-1;i++)
                             q2+=String.valueOf(query.charAt(i));
                         q2+=")";
-                        it.remove(); // avoids a ConcurrentModificationException
-
                     System.out.println(q2);
                 URL url=null;  
                     try {
@@ -899,28 +896,25 @@ public class ERnSQLConverter1 extends Application {
                     System.out.println(response);
                     httpURLConnection.disconnect();
                 }
-                    Iterator it2 = hmp1.entrySet().iterator();
+                    Set<String> it2 = hmp1.keySet();
                     HashMap<String,String> enp;
-                    Iterator it5=hmp2.entrySet().iterator();
-                    while(it5.hasNext())
+                    for(String ky:it2)
                     {
-                        Map.Entry pair4=(Map.Entry<String, ArrayList<String>>)it5.next();
-                        String k=(String) pair4.getKey();
-                        ArrayList<String> arr=(ArrayList<String>) pair4.getValue();
+                        String k=(String) ky;
+                        ArrayList<String> arr=(ArrayList<String>) hmp1.get(ky);
                         for(String str:arr)
                         {
                             if(primaryKey.contains(str))
                                 System.out.println(k+" "+str);
                         }
                     }
-                    while (it2.hasNext()) {
+                    for (String ky:it2) {
                         String query="",q2="";
-                        Map.Entry pair = (Map.Entry)it2.next();
-                        query+="create table "+pair.getKey()+"(";
+                        query+="create table "+ky+"(";
                         String rq="primary key(";
                         String fk="";
                         String xy="";
-                        ArrayList<String> en=(ArrayList<String>) pair.getValue();
+                        ArrayList<String> en=(ArrayList<String>) hmp1.get(ky);
                         int n=0;
                         for(String str:en)
                         {
@@ -948,7 +942,6 @@ public class ERnSQLConverter1 extends Application {
                         for(int i=0;i<query.length()-1;i++)
                             q2+=String.valueOf(query.charAt(i));
                         q2+=")";
-                        it2.remove(); // avoids a ConcurrentModificationException
                         if(n<=1)
                             q2="";
                     System.out.println(q2);
